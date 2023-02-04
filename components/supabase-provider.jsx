@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 
 const Context = createContext()
 
-export default function SupabaseProvider({ children }) {
+export default function SupabaseProvider({ children, session }) {
   const [supabase] = useState(() => createClient())
   const router = useRouter()
 
@@ -23,7 +23,7 @@ export default function SupabaseProvider({ children }) {
   }, [supabase.auth?.accessToken])
 
   return (
-    <Context.Provider value={{ supabase }}>
+    <Context.Provider value={{ supabase, session }}>
       <>{children}</>
     </Context.Provider>
   )
