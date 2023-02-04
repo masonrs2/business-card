@@ -12,8 +12,7 @@ import { useRouter } from 'next/navigation'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({ serverAccessToken }) {
-  const [workTitle, setWorkTitle] = useState('')
-  const [websiteTitle, setWebsiteTitle] = useState('')
+  
 
   const { supabase, session } = useSupabase()
   const router=  useRouter()
@@ -24,6 +23,7 @@ export default function Home({ serverAccessToken }) {
         console.log("session", session)
         router.push('/login')
       }
+      console.log("session", session)
      }
 
      checkAuth();
