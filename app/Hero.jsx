@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { useSupabase } from '@/components/supabase-provider'
+import { useSupabase } from '/components/supabase-provider'
 import { Configuration, OpenAIApi } from 'openai'
 
 const Hero = () => {
