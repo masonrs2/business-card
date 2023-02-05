@@ -3,20 +3,20 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useSupabase } from '/components/supabase-provider'
 import { Configuration, OpenAIApi } from 'openai'
+import { useRouter } from 'next/navigation'
 
 const Hero = () => {
     const { supabase, session } = useSupabase()
     const [workTitle, setWorkTitle] = useState('')
     const [websiteTitle, setWebsiteTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [Id, setId] = useState(null)
     const [cardData, setCardData] = useState(null)
     
-
+    const router = useRouter()
     const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
 });
 
 async function openaiCaller() {
@@ -45,6 +45,7 @@ async function openaiCaller() {
         console.log("error", e)
     }
 
+    router.refresh();
     return response.data?.choices[0].text;
 
 }
