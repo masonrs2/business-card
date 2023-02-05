@@ -56,7 +56,7 @@ async function openaiCaller() {
                 const { dataCheck, errorCheck } = await supabase
                     .from("card_data")
                     .select('*')
-                    .eq({ user_id: session?.user?.id })
+                    .eq('id', cardData?.id)
                 console.log("DataCheck", dataCheck)
 
                 if (dataCheck) {
@@ -68,7 +68,7 @@ async function openaiCaller() {
                             website_url: websiteTitle,
                             user_id: session?.user?.id
                         })
-                        .eq('user_id', session?.user?.id)
+                        .eq('id', cardData?.id)
 
 
                     console.log("updateData: ", data)
