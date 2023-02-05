@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import Hero from './Hero' 
 import { useSupabase } from "../components/supabase-provider" 
 import { useRouter } from 'next/navigation'
+import Navbar from './Navbar'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -31,10 +32,11 @@ export default function Home({ serverAccessToken }) {
 
 
   return (
-    <div className="bg-gradient-to-br from-rose-500 to to-purple-600 flex flex-col h-[calc(100vh-4rem)] items-center ">
+    <div className="bg-gradient-to-br from-rose-500 to to-purple-600 flex flex-col h-screen items-center ">
+      <Navbar />
       <div className="w-full h-full justify-center items-center flex flex-col">
 
-        
+
         <Hero />
       </div>
     </div>

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useSupabase } from '/components/supabase-provider'
 import { Configuration, OpenAIApi } from 'openai'
 import { useRouter } from 'next/navigation'
+import { BsArrowClockwise } from 'react-icons/bs'
 
 const Hero = () => {
     const { supabase, session } = useSupabase()
@@ -11,44 +12,44 @@ const Hero = () => {
     const [websiteTitle, setWebsiteTitle] = useState('')
     const [description, setDescription] = useState('')
     const [cardData, setCardData] = useState(null)
-    
+
     const router = useRouter()
     const { Configuration, OpenAIApi } = require("openai");
 
-const configuration = new Configuration({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-});
-
-async function openaiCaller() {
-
-    const openai = new OpenAIApi(configuration);
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `Create a two to three sentence or line description that will be placed on a business card. The description should be based off the following parameters given (No name introduction is needed as the users name is already identified on the business card):\n\n ${description} \n`,
-      max_tokens: 64,
-      temperature: 0,
+    const configuration = new Configuration({
+        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     });
 
-    console.log(response.data)
+    async function openaiCaller() {
 
-    try {
-        const { data, error } = await supabase
+        const openai = new OpenAIApi(configuration);
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `Create a two to three sentence or line description that will be placed on a business card. The description should be based off the following parameters given (No name introduction is needed as the users name is already identified on the business card):\n\n ${description} \n`,
+            max_tokens: 64,
+            temperature: 0,
+        });
+
+        console.log(response.data)
+
+        try {
+            const { data, error } = await supabase
                 .from("card_data")
                 .update({
                     description: response.data?.choices[0].text,
                 })
                 .eq('id', cardData?.id)
-        
-        if (error) throw error
 
-    } catch (e) {
-        console.log("error", e)
+            if (error) throw error
+
+        } catch (e) {
+            console.log("error", e)
+        }
+
+        router.refresh();
+        return response.data?.choices[0].text;
+
     }
-
-    router.refresh();
-    return response.data?.choices[0].text;
-
-}
 
     useEffect(() => {
         async function setDbData() {
@@ -112,7 +113,7 @@ async function openaiCaller() {
             }
         }
         getDbData()
-    
+
 
     }, [workTitle])
 
@@ -166,15 +167,19 @@ async function openaiCaller() {
                 />
             </div>
 
-            <button 
+            <button
                 onClick={openaiCaller}
                 className="rounded-lg bg-black/10 py-2 text-gray-100 font-medium no-underline transition hover:bg-black/25 w-32 active:bg-black/40 ">
-                  Generate
+                Generate
             </button>
 
-            <div className="grid grid-cols-3 gap-4 w-full h-60 bg-gradient-to-r mt-8 from-gray-900 via-gray-800 to-gray-700">
+            <div className="grid grid-cols-3 gap-4 w-full h-60 bg-gradient-to-r mt-8 from-gray-900 via-gray-800 to-gray-700 relative">
 
-                
+                <div class="w-11  overflow-hidden inline-block absolute right-0">
+                    <div class=" h-16 bg-gray-600 -rotate-45 transform origin-top-left">
+                        <BsArrowClockwise className="absolute cursor-pointer hover:text-gray-300 active:scale-105 active:duration-105 right-5 top-5 text-gray-400 " size={20} />
+                    </div>
+                </div>
 
                 <div className="col-span-1 flex justify-center pb-16 items-center">
                     <Image
