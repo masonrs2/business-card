@@ -12,6 +12,7 @@
     "@next/font": "13.1.6",
     "@supabase/supabase-auth-helpers": "^1.4.2",
     "@supabase/auth-helpers-nextjs": "^0.5.4",
+    "@supabase/auth-helpers-shared": "0.2.4",
     "next": "13.1.6",
     "openai": "^3.1.0",
     "react": "18.2.0",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "@supabase/supabase-js": "2.0.4"
   }
 }
