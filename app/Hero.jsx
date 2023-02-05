@@ -47,6 +47,7 @@ const Hero = () => {
         }
 
         router.refresh();
+        setDescription(response.data?.choices[0].text)
         return response.data?.choices[0].text;
 
     }
@@ -61,13 +62,12 @@ const Hero = () => {
                     .eq('id', cardData?.id)
                 console.log("DataCheck", dataCheck)
 
-                if (dataCheck) {
-                    const jobTitle = dataCheck.work_title ? dataCheck.work_title : workTitle
+                if (cardData) {
                     const { data, error } = await supabase
                         .from("card_data")
                         .update({
-                            work_title: workTitle,
-                            website_url: websiteTitle,
+                            work_title: workTitle === "" ? null : workTitle,
+                            website_url: websiteTitle == "" ? null : websiteTitle,
                             user_id: session?.user?.id
                         })
                         .eq('id', cardData?.id)
@@ -84,10 +84,10 @@ const Hero = () => {
                         })
 
                     console.log("newData: ", data)
+                    if (error) throw error
                 }
 
 
-                if (error) throw error
             } catch (e) {
                 console.log(e)
             }
@@ -115,10 +115,10 @@ const Hero = () => {
         getDbData()
 
 
-    }, [workTitle])
+    }, [workTitle, websiteTitle, description])
 
     return (
-        <div className="flex flex-col" >
+        <div className="flex flex-col group perspective" >
 
             <h1 className="text-2xl font-light">
                 Tell us about yourself
@@ -173,29 +173,82 @@ const Hero = () => {
                 Generate
             </button>
 
-            <div className="grid grid-cols-3 gap-4 w-full h-60 bg-gradient-to-r mt-8 from-gray-900 via-gray-800 to-gray-700 relative">
+            <div className="grid grid-cols-3 gap-4 w-full h-60 bg-gradient-to-r mt-8 from-gray-900 via-gray-800 to-gray-700 cursor-pointer relative group-hover:my-rotate-y-180 duration-1000 preserve-3d">
 
-                <div class="w-11  overflow-hidden inline-block absolute right-0">
-                    <div class=" h-16 bg-gray-600 -rotate-45 transform origin-top-left">
+
+                <div className="w-11 overflow-hidden inline-block absolute right-0 backface-hidden ">
+                    <div className=" h-16 bg-gray-600 -rotate-45 transform origin-top-left">
                         <BsArrowClockwise className="absolute cursor-pointer hover:text-gray-300 active:scale-105 active:duration-105 right-5 top-5 text-gray-400 " size={20} />
                     </div>
                 </div>
 
-                <div className="col-span-1 flex justify-center pb-16 items-center">
+                <div className="col-span-1 flex justify-center pb-16 items-center backface-hidden ">
                     <Image
                         src={session?.user.user_metadata.avatar_url}
                         width={75}
                         height={35}
                         alt="logo"
-                        className="rounded-full"
+                        className="rounded-full "
                     />
                 </div>
 
-                <div className="col-span-2 flex flex-col pb-28 justify-center ">
-                    <h1 className="text-2xl text-gray-200 font-light mt-10 " >{session?.user.user_metadata.name}</h1>
+                <div className="col-span-2 flex flex-col pb-28 justify-center backface-hidden ">
+                    <h1 className="text-2xl text-gray-200 font-light mt-10 backface-hidden " >{session?.user.user_metadata.name}</h1>
 
                     <h3 className="text-gray-300 font-light">{cardData?.work_title}</h3>
                     <p className="w-80 text-sm mt-4 text-gray-400">{cardData?.description}</p>
+                </div>
+
+                <div className=" absolute my-rotate-y-180 w-full h-full backface-hidden flex " >
+
+                    <div className="w-6 h-full py-2  flex flex-col gap-[5px] text-sm bg-gray-600 mr-28 text-gray-500">
+                        <div className="ml-2 mt-1">1</div>
+                        <div className="ml-2">2</div>
+                        <div className="ml-2">3</div>
+                        <div className="ml-2">4</div>
+                        <div className="ml-2">5</div>
+                        <div className="ml-2">6</div>
+                        <div className="ml-2">7</div>
+                        <div className="ml-2">8</div>
+                        <div className="ml-2">9</div>
+                    </div>
+
+                    <div className="w-11  overflow-hidden inline-block absolute right-0  ">
+                        <div className=" h-16 bg-gray-700 -rotate-45 transform origin-top-left">
+                            <BsArrowClockwise className="absolute cursor-pointer hover:text-gray-400 active:scale-105 active:duration-105 right-5 top-5 text-gray-500 " size={20} />
+                        </div>
+                    </div>
+
+                    <div className="text-sm mt-8 flex flex-col gap-[3px] ">
+                        <span className="text-purple-400 flex" >
+                            const
+                            <p className="text-yellow-400 ml-2">aboutMe <span className="mx-1 text-gray-400" > {"="} </span> <span className="text-gray-400" >{"{"}</span> </p>
+                        </span>
+
+                        <span className="text-red-400 flex ml-6">
+                            name <span className="text-blue-300">:</span> <p className="ml-2 text-green-200">'{session?.user?.user_metadata?.name}'</p>
+                        </span>
+
+                        <span className="text-red-400 flex ml-6">
+                            title <span className="text-blue-300">:</span> <p className="ml-2 text-green-200">'{cardData?.work_title}'</p>
+                        </span>
+
+                        <span className="text-red-400 flex ml-6">
+                            contact <span className="text-blue-300">:</span> <span className="text-gray-400 ml-2 " >{"{"}</span>
+                        </span>
+
+                        <span className="text-red-400 flex ml-12">
+                            email <span className="text-blue-300">:</span> <p className="ml-2 text-green-200">'{session?.user?.user_metadata?.email}'</p>
+                        </span>
+
+                        <span className="text-red-400 flex ml-12">
+                            website: <span className="text-blue-300">:</span> <p className="ml-2 text-green-200">'{cardData?.website_url}'</p>
+                        </span>
+
+                        <span className="text-gray-400 ml-6" >{"}"}</span>
+                        <span className="text-gray-400 " >{"}"}</span>
+
+                    </div>
                 </div>
 
 

@@ -13,7 +13,6 @@ const login = () => {
     })
 
     if(error) throw error
-    if(data) router.push('/')
   }
 
   return (
