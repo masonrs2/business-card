@@ -16,7 +16,7 @@ const Hero = () => {
     const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
 async function openaiCaller() {
