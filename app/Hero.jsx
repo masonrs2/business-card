@@ -177,7 +177,7 @@ async function openaiCaller() {
 
                 <div className="col-span-1 flex justify-center pb-16 items-center">
                     <Image
-                        src={session.user.user_metadata.avatar_url}
+                        src={session?.user.user_metadata.avatar_url}
                         width={75}
                         height={35}
                         alt="logo"
@@ -186,7 +186,7 @@ async function openaiCaller() {
                 </div>
 
                 <div className="col-span-2 flex flex-col pb-28 justify-center ">
-                    <h1 className="text-2xl text-gray-200 font-light mt-10 " >{session.user.user_metadata.name}</h1>
+                    <h1 className="text-2xl text-gray-200 font-light mt-10 " >{session?.user.user_metadata.name}</h1>
 
                     <h3 className="text-gray-300 font-light">{cardData?.work_title}</h3>
                     <p className="w-80 text-sm mt-4 text-gray-400">{cardData?.description}</p>
