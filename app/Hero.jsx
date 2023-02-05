@@ -9,29 +9,45 @@ const Hero = () => {
     const [workTitle, setWorkTitle] = useState('')
     const [websiteTitle, setWebsiteTitle] = useState('')
     const [description, setDescription] = useState('')
+    const [Id, setId] = useState(null)
     const [cardData, setCardData] = useState(null)
+    
 
-    // const generateDescription = async () => {
-    //     const configuration = new Configuration({
-    //         apiKey: process.env.OPENAI_API_KEY,
-    //       });
+    const { Configuration, OpenAIApi } = require("openai");
 
-    //       const openai = new OpenAIApi(configuration);
-          
-    //       const response = await openai.createCompletion({
-    //         model: "text-davinci-003",
-    //         prompt: `Create a two to three sentence or line description that will be placed on a business card. The description should be based off the following parameters given:\n\n ${description} \n`,
-    //         temperature: 0.7,
-    //         max_tokens: 64,
-    //         top_p: 1.0,
-    //         frequency_penalty: 0.0,
-    //         presence_penalty: 0.0,
-    //         stop: "\n"
-            
-    //       });
+const configuration = new Configuration({
+    apiKey: "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",
+});
 
-    //       return response.data.choices[0]?.text;
-    // }
+async function openaiCaller() {
+
+    const openai = new OpenAIApi(configuration);
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `Create a two to three sentence or line description that will be placed on a business card. The description should be based off the following parameters given (No name introduction is needed as the users name is already identified on the business card):\n\n ${description} \n`,
+      max_tokens: 64,
+      temperature: 0,
+    });
+
+    console.log(response.data)
+
+    try {
+        const { data, error } = await supabase
+                .from("card_data")
+                .update({
+                    description: response.data?.choices[0].text,
+                })
+                .eq('id', cardData?.id)
+        
+        if (error) throw error
+
+    } catch (e) {
+        console.log("error", e)
+    }
+
+    return response.data?.choices[0].text;
+
+}
 
     useEffect(() => {
         async function setDbData() {
@@ -95,7 +111,7 @@ const Hero = () => {
             }
         }
         getDbData()
-
+    
 
     }, [workTitle])
 
@@ -150,7 +166,7 @@ const Hero = () => {
             </div>
 
             <button 
-                // onClick={generateDescription}
+                onClick={openaiCaller}
                 className="rounded-lg bg-black/10 py-2 text-gray-100 font-medium no-underline transition hover:bg-black/25 w-32 active:bg-black/40 ">
                   Generate
             </button>
@@ -167,11 +183,13 @@ const Hero = () => {
                     />
 
                 </div>
-                <div className="col-span-2 flex flex-col pb-28 justify-center">
-                    <h1 className="text-2xl text-gray-200 font-light " >{session.user.user_metadata.name}</h1>
+                <div className="col-span-2 flex flex-col pb-28 justify-center ">
+                    <h1 className="text-2xl text-gray-200 font-light mt-10 " >{session.user.user_metadata.name}</h1>
 
-                    <h3>{cardData?.work_title}</h3>
+                    <h3 className="text-gray-300 font-light">{cardData?.work_title}</h3>
+                    <p className="w-80 text-sm mt-4 text-gray-400">{cardData?.description}</p>
                 </div>
+
 
             </div>
 
