@@ -52,6 +52,56 @@ const Hero = () => {
 
     }
 
+    async function updateCard() {
+        try {
+            if(cardData) {
+                if(workTitle.length < 1 && websiteTitle.length < 1) return
+                else if(workTitle.length < 1 && websiteTitle.length > 1) {
+                    const { data, error } = await supabase
+                        .from("card_data")
+                        .update({
+                            website_url: websiteTitle == "" ? null : websiteTitle,
+                        })
+                        .eq('user_id', session?.user?.id)
+                    
+                         
+        
+                        if (error) {
+                            console.log("no card data")
+                            throw error
+                        }
+                router.refresh();
+
+                }
+                else if(workTitle.length > 1 && websiteTitle.length < 1) {
+                    const { data, error } = await supabase
+                        .from("card_data")
+                        .update({
+                            work_title: workTitle === "" ? null : workTitle,
+                        })
+                        .eq('user_id', session?.user?.id)
+
+                        if(data) {
+                            console.log("updateWorked!!")
+                            
+                        }
+
+                        if (error) {
+                            console.log("no card data")
+                            throw error
+                        }
+                router.refresh();
+                }
+                
+
+                
+            }
+            
+        } catch (e) {
+            console.log("e", e)
+        }
+    }
+
     useEffect(() => {
         async function setDbData() {
             if (workTitle.length < 1) return
@@ -63,14 +113,43 @@ const Hero = () => {
                 console.log("DataCheck", dataCheck)
 
                 if (cardData) {
+                    if(workTitle.length < 1 && websiteTitle.length < 1) return
+                else if(workTitle.length < 1 && websiteTitle.length > 1) {
+                    const { data, error } = await supabase
+                        .from("card_data")
+                        .update({
+                            website_url: websiteTitle == "" ? null : websiteTitle,
+                        })
+                        .eq('user_id', session?.user?.id)
+                    
+                         
+        
+                        if (error) {
+                            console.log("no card data")
+                            throw error
+                        }
+                router.refresh();
+
+                }
+                else if(workTitle.length > 1 && websiteTitle.length < 1) {
                     const { data, error } = await supabase
                         .from("card_data")
                         .update({
                             work_title: workTitle === "" ? null : workTitle,
-                            website_url: websiteTitle == "" ? null : websiteTitle,
-                            user_id: session?.user?.id
                         })
-                        .eq('id', cardData?.id)
+                        .eq('user_id', session?.user?.id)
+
+                        if(data) {
+                            console.log("updateWorked!!")
+                            
+                        }
+
+                        if (error) {
+                            console.log("no card data")
+                            throw error
+                        }
+                router.refresh();
+                }
 
 
                     console.log("updateData: ", data)
@@ -113,9 +192,33 @@ const Hero = () => {
             }
         }
         getDbData()
+       
 
 
-    }, [workTitle, websiteTitle, description])
+    }, [workTitle, websiteTitle, description ])
+
+    useEffect(() => {
+        async function getDbData() {
+            try {
+                const { data, error } = await supabase
+                    .from("card_data")
+                    .select("*")
+                    .eq("user_id", session?.user?.id)
+
+                if (error) throw error
+
+                if (data) {
+                    console.log("*get* card_data:", data[data.length - 1])
+                    setCardData(data[data.length - 1])
+                }
+
+            } catch (e) {
+                console.log("error", e)
+            }
+        }
+        getDbData()
+        console.log("CardDataa", cardData)
+    }, [])
 
     return (
         <div className="flex flex-col group perspective" >
@@ -257,8 +360,9 @@ const Hero = () => {
             <div className="w-full items-center justify-center mt-10 flex">
 
                 <button
+                    onClick={updateCard}
                     className="rounded-full bg-black/10 px-10 py-3  text-gray-100 font-medium no-underline transition hover:bg-black/25 w-32 active:bg-black/40 ">
-                    Publish
+                    Update
                 </button>
             </div>
 
