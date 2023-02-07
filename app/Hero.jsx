@@ -70,7 +70,7 @@ const Hero = () => {
                             console.log("no card data")
                             throw error
                         }
-                router.refresh();
+                window.location.reload(true)
                 }
                 else if(workTitle.length < 1 && websiteTitle.length > 1) {
                     const { data, error } = await supabase
@@ -86,7 +86,7 @@ const Hero = () => {
                             console.log("no card data")
                             throw error
                         }
-                router.refresh();
+                        window.location.reload(true)
 
                 }
                 else if(workTitle.length > 1 && websiteTitle.length < 1) {
@@ -106,7 +106,7 @@ const Hero = () => {
                             console.log("no card data")
                             throw error
                         }
-                router.refresh();
+                        window.location.reload(true)
                 }
                 
 
