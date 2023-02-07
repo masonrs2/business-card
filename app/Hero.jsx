@@ -56,6 +56,22 @@ const Hero = () => {
         try {
             if(cardData) {
                 if(workTitle.length < 1 && websiteTitle.length < 1) return
+                else if(workTitle.length > 1 && websiteTitle.length > 1) {
+                    const { data, error } = await supabase
+                        .from("card_data")
+                        .update({
+                            website_url: websiteTitle == "" ? null : websiteTitle,
+                        })
+                        .eq('user_id', session?.user?.id)
+                    
+                         
+        
+                        if (error) {
+                            console.log("no card data")
+                            throw error
+                        }
+                router.refresh();
+                }
                 else if(workTitle.length < 1 && websiteTitle.length > 1) {
                     const { data, error } = await supabase
                         .from("card_data")
